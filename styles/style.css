@@ -1,0 +1,36 @@
+body {
+  margin: 0;
+  background-color: lightgray;
+}
+ #start-btn, #restart-btn{
+  background-color: green;
+  color: rgb(138, 36, 36);
+  padding: 20px;
+  font-size: 20px;
+  margin-top: 40px;
+  border-radius: 30px; 
+ }
+ .container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+ }
+ #box-game{
+    background-color: rgb(46, 141, 46);
+    width:1000px;
+    height:600px;
+    margin:60px;
+    margin-left:90px;
+    overflow: hidden;
+    user-select: none;
+    position: relative;
+    background-image: url("../images/blue-sky.jpg");
+    background-size: cover;
+ }
+ #box-game img{
+    position: absolute;
+ }
+#game-start-screen,#game-end-screen{
+    display: none;
+} 
