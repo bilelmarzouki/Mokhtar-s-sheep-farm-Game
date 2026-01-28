@@ -257,9 +257,9 @@ function resetGame() {
 }
 
 function gameOver() {
-  clearInterval(gameId);
+  /*clearInterval(gameId);
   clearInterval(sheepSpawnId);
-  clearTimeout(id);
+  clearTimeout(id);*/
   ScreenNode.style.display = "none";
   EndScreenNode.style.display = "flex";
 
