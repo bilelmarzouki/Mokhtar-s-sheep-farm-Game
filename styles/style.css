@@ -7,7 +7,7 @@ body {
   color: rgb(138, 36, 36);
   padding: 20px;
   font-size: 20px;
-  margin-top: 40px;
+  margin-top: 200px;
   border-radius: 30px; 
  }
  .container{
@@ -15,6 +15,15 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+ }
+ #game-start-screen{
+   background-image: url("../images/startGame.jpg");
+   background-size: cover;
+   position: relative;
+    width:1000px;
+    height:600px;
+    margin:60px;
+    margin-left:250px;
  }
  #box-game{
     background-color: rgb(46, 141, 46);
@@ -27,18 +36,38 @@ body {
     position: relative;
     background-image: url("../images/blue-sky.jpg");
     background-size: cover;
+ } 
+ #game-end-screen{
+    background-color: rgb(46, 141, 46);
+    width:1000px;
+    height:600px;
+    margin:60px;
+    margin-left:90px;
+    user-select: none;
+    position: relative;
+    background-image: url("../images/end_Game.jpg");
+    background-size: cover;
  }
+
  #box-game img{
     position: absolute;
  }
 #game-start-screen,#game-end-screen{
     display: none;
 }
-#timeRemaining {
-    font-size: 14px;
+#timeRemaining, #score{
+    font-size: 20px;
     font-style: italic;
     color: #333;
     margin: 0 auto;
     margin-top: -35px;
+    margin-bottom: 12px;
+}
+#result {
+    font-size: 50px;
+    font-style: italic;
+    color:rgb(5, 5, 5);
+    margin: 0 auto;
+    margin-top: 20px;
     margin-bottom: 12px;
 }
