@@ -6,6 +6,10 @@ const BoxScreenNode = document.querySelector("#box-game");
 
 const EndScreenNode = document.querySelector("#game-end-screen");
 const RestartGameButtonNode = document.querySelector("#restart-btn");
+const timeRemainingContainer = document.getElementById("timeRemaining");
+timeRemainingContainer.style.position="absolute"
+timeRemainingContainer.style.top="50px"
+timeRemainingContainer.style.right="20px"
 
 //* GLOBAL GAME VARIABLES
 let farmerObj = null;
@@ -25,6 +29,8 @@ let gateOpen4 = false;
 let numberGateOpenY3 = 0;
 let numberGateOpenY4 = 0;
 let caught = false;
+let caughtSheep=null
+let AllSheep=[]
 StartScreenNode.style.display = "flex";
 ScreenNode.style.display = "none";
 
@@ -63,7 +69,7 @@ function gameActions() {
      sheepSpawn.moveDown()
      sheepSpawn.moveUp()*/
   });
-  collisionFarmerSheep();
+   collisionFarmerSheep();
 }
 function makeSheep() {
   let randomPositionX = Math.floor(Math.random() * 150) + 250;
@@ -135,20 +141,30 @@ function checkOpenCloseGate4() {
     verticalFence4.closeTheGate();
   }
 }
+function getAlltheSheep(){
+   return sheepArr.concat(sheepArrSpawn)
+}
 
 function collisionFarmerSheep() {
   if (caught) return  
-  for (let i = 0; i < sheepArr.length; i++) {
+  AllSheep=getAlltheSheep()
+  for (let i = 0; i < AllSheep.length; i++) {
     
-    let isColliding = checkCollision(farmerObj, sheepArr[i]);
-    if (isColliding) {
-      sheepArr[i].x = farmerObj.x + 10;
-      sheepArr[i].y = farmerObj.y + 10;
-      sheepArr[i].speed= farmerObj.speed
+    let isColliding = checkCollision(farmerObj, AllSheep[i]);
+    if (isColliding && AllSheep[i].isInBarn===false) {
+      caughtSheep=AllSheep[i]
+      AllSheep[i].isCaught = true
+      AllSheep[i].x = farmerObj.x + 10;
+      AllSheep[i].node.style.left=`${AllSheep[i].x}px`
+      AllSheep[i].y = farmerObj.y + 10;
+      AllSheep[i].node.style.top=`${AllSheep[i].y}px`
+      // sheepArr[i].speed= farmerObj.speed
       break;
     }
   }
 }
+
+//I will make it as a Bonus it's Not that important
 function collisionFarmerBarn() {
   // birdObj
   sheepArr.forEach((eachSheepObj) => {
@@ -160,6 +176,7 @@ function collisionFarmerBarn() {
     }
   });
 }
+// I will make it as a Bonus it's Not that important
 function collisionSheepBarn() {
   // birdObj
   sheepArr.forEach((eachSheepObj) => {
@@ -198,11 +215,12 @@ document.addEventListener("keydown", (event) => {
 
   checkOpenCloseGate3();
   checkOpenCloseGate4();
-  collisionFarmerSheep();
+  //collisionFarmerSheep();
 });
 document.addEventListener("keydown",(event)=>{
-    if(event.key===" "){
+    if(event.key ===" "){
         caught=false
+        caughtSheep.isInBarn=true
     }
 })
 /*document.addEventListener("keydown",(event)=>{

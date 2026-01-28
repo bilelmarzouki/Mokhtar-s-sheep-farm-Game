@@ -12,12 +12,14 @@ class Sheep{
       this.id=setInterval(()=>{
         let directions=["forward","backward","up","down"]
         this.dir=directions[Math.floor(Math.random()*directions.length)]
-      },1000)
+      },2000)
       this.node.style.position="absolute"
       this.node.style.top=`${this.y}px`
       this.node.style.left=`${this.x}px`
       this.node.style.width=`${this.width}px`
       this.node.style.height=`${this.height}px`
+      this.isInBarn=false
+      this.isCaught = false
     }
     moveForward(){
       this.x+=this.speed
@@ -38,6 +40,9 @@ class Sheep{
     }
     
    walk(){
+
+     if (this.isCaught) return 
+
      switch (this.dir) {
         case "forward":
             this.moveForward()
@@ -55,7 +60,7 @@ class Sheep{
             break;
      }
    }
-   stopWalking(){
-    clearInterval(this.id)
-   }
+  /* stopWalking(){
+      this.isCaught=true;
+   }*/
 }
