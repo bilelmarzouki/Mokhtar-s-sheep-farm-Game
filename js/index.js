@@ -66,8 +66,8 @@ function startGame() {
   console.log(dogObj);
   makeSheep();
   barnConstruction();
-  let id = setTimeout(() => {
-    let timer = setInterval(() => {
+    setTimeout(() => {
+     let timer = setInterval(() => {
       timeRemaining -= 1;
       if (timeRemaining <= 0) {
         //quiz.hasEnded();
