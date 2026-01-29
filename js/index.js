@@ -4,32 +4,25 @@ const ScreenNode = document.querySelector("#game-screen");
 const BoxScreenNode = document.querySelector("#box-game");
 const EndScreenNode = document.querySelector("#game-end-screen");
 const RestartGameButtonNode = document.querySelector("#restart-btn");
-const timeRemainingContainer = document.getElementById("timeRemaining");
+/*const timeRemainingContainer = document.getElementById("timeRemaining");
 timeRemainingContainer.style.position = "absolute";
 timeRemainingContainer.style.top = "50px";
-timeRemainingContainer.style.right = "20px";
-const scoreContainer = document.getElementById("score");
+timeRemainingContainer.style.right = "20px";*/
+/*const scoreContainer = document.getElementById("score");
 scoreContainer.style.position = "absolute";
 scoreContainer.style.top = "50px";
 scoreContainer.style.left = "40px";
 scoreContainer.style.fontSize = "30px";
-scoreContainer.style.fontWeight = "bold";
+scoreContainer.style.fontWeight = "bold";*/
 const resultContainer = document.querySelector("#result");
 
 //* GLOBAL GAME VARIABLES
-let WinOrLoose = "";
 let farmerObj = null;
 let dogObj = null;
 let sheepArr = [];
 let sheepArrSpawn = [];
-let fence1 = null;
-let fence2 = null;
-let fence3 = null;
-let fence4 = null;
-let verticalFence1 = null;
-let verticalFence2 = null;
-let verticalFence3 = null;
-let verticalFence4 = null;
+let fencesObj;
+let fencesArr;
 let gateOpen3 = false;
 let gateOpen4 = false;
 let numberGateOpenY3 = 0;
@@ -41,57 +34,87 @@ const quizDuration = 120;
 let timeRemaining = quizDuration;
 let timeLimit = quizDuration;
 let countSheepInBarn = 0;
+let timer;
+let sheepSpawnId;
+let gameId;
+let sun;
+let nature;
+let scoreDiv;
+let timeDiv;
 StartScreenNode.style.display = "flex";
 ScreenNode.style.display = "none";
-let sheepSpawnId = null;
-let gameId = null;
-/*let fences = [
-  new Fence(700, 500),
-  new Fence(700, 310),
-  new Fence(780, 500),
-  new Fence(780, 310),
-  new Fence(830, 445, "vertical"),
-  new Fence(830, 365, "vertical"),
-  new Fence(640, 445, "vertical", gateOpen3, numberGateOpenY3),
-  new Fence(640, 365, "vertical", gateOpen4, numberGateOpenY4),
-];*/
-
 //* GLOBAL GAME FUNCTIONS
 function startGame() {
   StartScreenNode.style.display = "none";
   ScreenNode.style.display = "flex";
+  sun = document.createElement("img");
+  sun.src = "./images/summerSun.png";
+  sun.alt = "sun";
+  sun.style.position = "absolute";
+  sun.style.width = "200px";
+  sun.style.height = "200px";
+  sun.style.top = "0px";
+  sun.style.left = "500px";
+  BoxScreenNode.append(sun);
+
+  nature = document.createElement("img");
+  nature.src = "./images/nature.jpg";
+  nature.alt = "nature";
+  nature.style.position = "absolute";
+  nature.style.width = "1000px";
+  nature.style.height = "400px";
+  nature.style.top = "200px";
+  nature.style.left = "0px";
+  BoxScreenNode.append(nature);
+
+  timeDiv = document.createElement("div");
+  timeDiv.id = "timeRemaining";
+  timeDiv.style.position = "absolute";
+  timeDiv.style.top = "50px";
+  timeDiv.style.right = "20px";
+  BoxScreenNode.append(timeDiv);
+
+  scoreDiv = document.createElement("div");
+  scoreDiv.id = "score";
+  scoreDiv.style.position = "absolute";
+  scoreDiv.style.top = "50px";
+  scoreDiv.style.left = "40px";
+  scoreDiv.style.fontSize = "30px";
+  scoreDiv.style.fontWeight = "bold";
+  BoxScreenNode.append(scoreDiv);
+
   farmerObj = new Farmer();
   console.log(farmerObj);
   dogObj = new Dog();
   console.log(dogObj);
   makeSheep();
-  barnConstruction();
-    setTimeout(() => {
-     let timer = setInterval(() => {
-      timeRemaining -= 1;
-      if (timeRemaining <= 0) {
-        //quiz.hasEnded();
-        gameOver();
-        //showResults();
-        //Won Or Loose
-        const minutes = Math.floor(timeLimit / 60)
-          .toString()
-          .padStart(2, "0");
-        const seconds = (timeLimit % 60).toString().padStart(2, "0");
-        timeRemainingContainer.innerText = `${minutes}:${seconds}`;
-        //endView.style.display = "block";
-        // quizView.style.display = "none";
-        clearInterval(timer);
-      }
-      const minutes = Math.floor(timeRemaining / 60)
+  fencesObj = barnConstruction();
+  fencesArr = Object.values(fencesObj);
+
+  timer = setInterval(() => {
+    timeRemaining -= 1;
+    if (timeRemaining <= 0) {
+      //quiz.hasEnded();
+      gameOver();
+      //showResults();
+      //Won Or Loose
+      const minutes = Math.floor(timeLimit / 60)
         .toString()
         .padStart(2, "0");
-      const seconds = (timeRemaining % 60).toString().padStart(2, "0");
-      timeRemainingContainer.innerText = `${minutes}:${seconds}`;
-      timeRemainingContainer.style.fontSize = "30px";
-      timeRemainingContainer.style.fontWeight = "bold";
-    }, 1000);
-  }, 0);
+      const seconds = (timeLimit % 60).toString().padStart(2, "0");
+      timeDiv.innerText = `${minutes}:${seconds}`;
+      //endView.style.display = "block";
+      // quizView.style.display = "none";
+      clearInterval(timer);
+    }
+    const minutes = Math.floor(timeRemaining / 60)
+      .toString()
+      .padStart(2, "0");
+    const seconds = (timeRemaining % 60).toString().padStart(2, "0");
+    timeDiv.innerText = `${minutes}:${seconds}`;
+    timeDiv.style.fontSize = "30px";
+    timeDiv.style.fontWeight = "bold";
+  }, 1000);
 
   gameId = setInterval(gameActions, Math.round(1000 / 60));
   sheepSpawnId = setInterval(sheepSpawn, 20000);
@@ -105,9 +128,9 @@ function gameActions() {
     sheepSpawn.walk();
   });
   collisionFarmerSheep();
-  //collisionSheepBarn()
+  collisionSheepBarn();
   myScore();
-  scoreContainer.innerText = `Score:${countSheepInBarn}`;
+  scoreDiv.innerText = `Score:${countSheepInBarn}`;
 }
 
 function makeSheep() {
@@ -136,48 +159,62 @@ function sheepSpawn() {
 }
 
 function barnConstruction() {
-  fence1 = new Fence(700, 500);
-  fence2 = new Fence(700, 310);
-  fence3 = new Fence(780, 500);
-  fence4 = new Fence(780, 310);
-  verticalFence1 = new Fence(830, 445, "vertical");
-  verticalFence2 = new Fence(830, 365, "vertical");
-  verticalFence3 = new Fence(640, 445, "vertical", gateOpen3, numberGateOpenY3);
-  verticalFence4 = new Fence(640, 365, "vertical", gateOpen4, numberGateOpenY4);
+  return {
+    fence1: new Fence(700, 500),
+    fence2: new Fence(700, 310),
+    fence3: new Fence(780, 500),
+    fence4: new Fence(780, 310),
+    verticalFence1: new Fence(830, 445, "vertical"),
+    verticalFence2: new Fence(830, 365, "vertical"),
+    verticalFence3: new Fence(
+      640,
+      445,
+      "vertical",
+      gateOpen3,
+      numberGateOpenY3,
+    ),
+    verticalFence4: new Fence(
+      640,
+      365,
+      "vertical",
+      gateOpen4,
+      numberGateOpenY4,
+    ),
+  };
 }
 
 function checkOpenCloseGate3() {
   const farmerPositionX = farmerObj.x + farmerObj.width;
   const farmerPositionY = farmerObj.y + farmerObj.height;
-  const fence3X = verticalFence3.x + farmerObj.width;
+  const fence3X = fencesObj.verticalFence3.x + farmerObj.width;
 
   const nearGateY = 310 <= farmerPositionY && farmerPositionY <= 500;
   const nearGate3X =
     farmerPositionX > fence3X - 60 && farmerPositionX < fence3X + 90;
   //Gate 3
-  if (!verticalFence3.isOpen && nearGate3X && nearGateY) {
-    verticalFence3.numberGateOpenY = 65;
-    verticalFence3.openTheGate();
-  } else if (verticalFence3.isOpen && (!nearGate3X || !nearGateY)) {
-    verticalFence3.numberGateOpenY = 65;
-    verticalFence3.closeTheGate();
+  if (!fencesObj.verticalFence3.isOpen && nearGate3X && nearGateY) {
+    fencesObj.verticalFence3.numberGateOpenY = 65;
+    fencesObj.verticalFence3.openTheGate();
+  } else if (fencesObj.verticalFence3.isOpen && (!nearGate3X || !nearGateY)) {
+    fencesObj.verticalFence3.numberGateOpenY = 65;
+    fencesObj.verticalFence3.closeTheGate();
   }
 }
 function checkOpenCloseGate4() {
   const farmerPositionX = farmerObj.x + farmerObj.width;
   const farmerPositionY = farmerObj.y + farmerObj.height;
-  const fence4X = verticalFence4.x + farmerObj.width;
+  const fence4X = fencesObj.verticalFence4.x + farmerObj.width;
 
   const nearGateY = 310 <= farmerPositionY && farmerPositionY <= 500;
   const nearGate4X =
     farmerPositionX > fence4X - 60 && farmerPositionX < fence4X + 90;
   //Gate 3
-  if (!verticalFence4.isOpen && nearGate4X && nearGateY) {
-    verticalFence4.numberGateOpenY = -55;
-    verticalFence4.openTheGate();
-  } else if (verticalFence4.isOpen && (!nearGate4X || !nearGateY)) {
-    verticalFence4.numberGateOpenY = -55;
-    verticalFence4.closeTheGate();
+  if (!fencesObj.verticalFence4.isOpen && nearGate4X && nearGateY) {
+    fencesObj.verticalFence4.numberGateOpenY = -55;
+    fencesObj.verticalFence4.openTheGate();
+  } else if (fencesObj.verticalFence4.isOpen && (!nearGate4X || !nearGateY)) {
+    fencesObj.verticalFence4.numberGateOpenY = -55;
+    fencesObj.verticalFence4.closeTheGate();
   }
 }
 function getAlltheSheep() {
@@ -196,48 +233,36 @@ function collisionFarmerSheep() {
       AllSheep[i].node.style.left = `${AllSheep[i].x}px`;
       AllSheep[i].y = farmerObj.y + 10;
       AllSheep[i].node.style.top = `${AllSheep[i].y}px`;
-      // sheepArr[i].speed= farmerObj.speed
       break;
     }
   }
 }
 
 //I will make it as a Bonus it's Not that important
-/*function collisionFarmerBarn() {
-  AllSheep.forEach((eachSheepObj) => {
-    let lastMoveSheepX = eachSheepObj.x;
-    let lastMoveSheepY = eachSheepObj.y;
-    eachSheepObj.walk();
-    fences.forEach((fence) => {
-      let isColliding = checkCollision(fence, eachSheepObj);
-      if (isColliding) {
-        eachSheepObj.x = lastMoveSheepX;
-        eachSheepObj.y = lastMoveSheepY;
-      }
-    });
-  });
-}
+/*function collisionFarmerBarn() {}
 */
-// I will make it as a Bonus it's Not that important
-/*function collisionSheepBarn() {
+function collisionSheepBarn() {
   AllSheep.forEach((eachSheepObj) => {
-    let lastMoveSheepX = eachSheepObj.x;
-    let lastMoveSheepY = eachSheepObj.y;
-    //eachSheepObj.walk();
-    fences.forEach((fence) => {
+    fencesArr.forEach((fence) => {
       if (!eachSheepObj.isCaught) {
         let isColliding = checkCollision(fence, eachSheepObj);
         if (isColliding) {
-          eachSheepObj.x = lastMoveSheepX;
-          eachSheepObj.y = lastMoveSheepY;
-          eachSheepObj.node.style.left = `${eachSheepObj.x} px`;
-          eachSheepObj.node.style.top = `${eachSheepObj.y}px`;
+          if (eachSheepObj.dir === "up") {
+            eachSheepObj.dir = "down";
+          } else if (eachSheepObj.dir === "down") {
+            eachSheepObj.dir = "up";
+          } else if (eachSheepObj.dir === "forward") {
+            eachSheepObj.dir = "backward";
+          } else if (eachSheepObj === "backward") {
+            eachSheepObj.dir = "forward";
+          } else {
+            console.log("what happend to the sheep!!");
+          }
         }
       }
     });
   });
 }
-*/
 
 function checkCollision(obj1, obj2) {
   // return true if both objects collide
@@ -253,13 +278,10 @@ function myScore() {
   return countSheepInBarn;
 }
 function resetGame() {
-  ScreenNode.innerHTML = "";
+  BoxScreenNode.innerHTML = "";
 }
 
 function gameOver() {
-  /*clearInterval(gameId);
-  clearInterval(sheepSpawnId);
-  clearTimeout(id);*/
   ScreenNode.style.display = "none";
   EndScreenNode.style.display = "flex";
 
@@ -270,19 +292,11 @@ function gameOver() {
   } else {
     resultContainer.innerText = `You catched ${countSheepInBarn} out of ${AllSheep.length} sheep in the field!
         Oops You Loose
-    `;
+        `;
   }
 }
 //* EVENT LISTENERS
 StartScreenNode.addEventListener("click", startGame);
-RestartGameButtonNode.addEventListener("click", () => {
-  EndScreenNode.style.display = "none";
-  //ScreenNode.style.display = "flex";
-  //resetGame();
-  //startGame();
-  ScreenNode.style.display = "flex";
-});
-
 document.addEventListener("keydown", (event) => {
   if (event.key === "ArrowRight") {
     farmerObj.moveForward();
@@ -299,8 +313,42 @@ document.addEventListener("keydown", (event) => {
 });
 document.addEventListener("keydown", (event) => {
   if (event.key === " ") {
+    if(!caughtSheep) return;
+    
+    if(caughtSheep.sheepIsInBarn()){
+      caughtSheep.isInBarn = true;
+      countSheepInBarn++;
+      caughtSheep=null;
+    }
     caught = false;
-    caughtSheep.isInBarn = true;
-    countSheepInBarn++;
   }
+});
+RestartGameButtonNode.addEventListener("click", () => {
+  RestartGameButtonNode.blur();
+  clearInterval(gameId);
+  clearInterval(sheepSpawnId);
+  clearInterval(timer);
+  farmerObj = null;
+  dogObj = null;
+  sun = null;
+  nature = null;
+  scoreDiv = null;
+  timeDiv = null;
+  sheepArr = [];
+  sheepArrSpawn = [];
+  fencesObj=null;
+  fencesArr=[];
+  gateOpen3 = false;
+  gateOpen4 = false;
+  numberGateOpenY3 = 0;
+  numberGateOpenY4 = 0;
+  caught = false;
+  caughtSheep = null;
+  AllSheep = [];
+  timeRemaining = quizDuration;
+  timeLimit = quizDuration;
+  countSheepInBarn = 0;
+  resetGame();
+  EndScreenNode.style.display = "none";
+  startGame();
 });

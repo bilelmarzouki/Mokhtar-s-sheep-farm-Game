@@ -9,7 +9,7 @@ class Sheep{
       this.width=40
       this.speed=1
       this.dir="down"
-      this.id=setInterval(()=>{
+      setInterval(()=>{
         let directions=["forward","backward","up","down"]
         this.dir=directions[Math.floor(Math.random()*directions.length)]
       },2000)
@@ -63,4 +63,7 @@ class Sheep{
   /* stopWalking(){
       this.isCaught=true;
    }*/
+   sheepIsInBarn(){
+      return (this.x>700 && this.x<830)&&(this.y>300 && this.y<520)
+  }
 }
