@@ -21,10 +21,10 @@ Your mission is to catch wandering sheep and deliver them safely into the barn b
 -Restart Button: Restart the game.
 
 ## Game Features
-1)Start/Restart button: start a new game or restart it.
-2)Random sheep Movement:sheep move randomly around the play area.
-3)keyboard-controlled farmer: the farmer is controlled via the arrow keys.
-4)Timer(120 seconds): You have 120 secs to save as many sheep as possible.
+1) Start / Restart button: Start a new game or restart anytime.
+2) Random sheep movement: Sheep move randomly around the play area.
+3) Keyboard-controlled farmer: The farmer is controlled via the arrow keys.
+4) Timer (120 seconds): You have 120 seconds to save as many sheep as possible.
 5) Farmer ↔ Sheep collision (catching): Colliding with a sheep lets the farmer catch/carry it.
 6) Sheep ↔ Barn rule: Sheep can’t enter the barn by themselves—only when the farmer brings them in.
 7) Score tracking (Saved): The saved score updates after each sheep is released inside the barn.
@@ -39,7 +39,7 @@ Your mission is to catch wandering sheep and deliver them safely into the barn b
 
 1) Open the project folder in VS Code.
 2) Install the “Live Server” extension.
-3) Right-click `index.html` → **Open with Live Server** (or click **Go Live**).
+3) Right-click `index.html` → **Open with Live Server** .
 
 ## Tech Stack
 
