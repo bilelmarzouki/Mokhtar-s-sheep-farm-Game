@@ -41,6 +41,9 @@ let sun;
 let nature;
 let scoreDiv;
 let timeDiv;
+let sheepRemovedOutsideBoxGame=0
+
+console.log(sheepRemovedOutsideBoxGame)
 StartScreenNode.style.display = "flex";
 ScreenNode.style.display = "none";
 //* GLOBAL GAME FUNCTIONS
@@ -90,7 +93,9 @@ function startGame() {
   makeSheep();
   fencesObj = barnConstruction();
   fencesArr = Object.values(fencesObj);
-
+  /*if(sheepRemovedOutsideBoxGame<4){
+    gameOver()
+  }*/
   timer = setInterval(() => {
     timeRemaining -= 1;
     if (timeRemaining <= 0) {
@@ -127,12 +132,13 @@ function gameActions() {
   sheepArrSpawn.forEach((sheepSpawn) => {
     sheepSpawn.walk();
   });
+  //removeSheepOutsideTheBox()
   collisionFarmerSheep();
   collisionSheepBarn();
   myScore();
   scoreDiv.innerText = `Score:${countSheepInBarn}`;
 }
-
+console.log(sheepRemovedOutsideBoxGame)
 function makeSheep() {
   let randomPositionX = Math.floor(Math.random() * 150) + 250;
   let randomPositionY = Math.floor(Math.random() * 150) + 100;
@@ -157,6 +163,23 @@ function sheepSpawn() {
   let sheepSpawn2 = new Sheep(randomPositionX + gapX, randomPositionY + gapY);
   sheepArrSpawn.push(sheepSpawn2);
 }
+
+/*function removeSheepOutsideTheBox() {
+  for (let i = AllSheep.length - 1; i >= 0; i--) {
+    const sheep = AllSheep[i];
+    const outOfTheGameArea =
+      sheep.x + sheep.width < 0 ||
+      sheep.x> 1000 ||
+      sheep.y + sheep.height < 0 ||
+      sheep.y > 600;
+    if (outOfTheGameArea) {
+      sheep.node.remove();
+      AllSheep.splice(i, 1);
+      sheepRemovedOutsideBoxGame++;
+      console.log(sheepRemovedOutsideBoxGame)
+    }
+  }
+}*/
 
 function barnConstruction() {
   return {
@@ -218,7 +241,7 @@ function checkOpenCloseGate4() {
   }
 }
 function getAlltheSheep() {
-  return sheepArr.concat(sheepArrSpawn);
+  return [...sheepArr, ...sheepArrSpawn];
 }
 
 function collisionFarmerSheep() {
@@ -238,9 +261,11 @@ function collisionFarmerSheep() {
   }
 }
 
+
+
 //I will make it as a Bonus it's Not that important
 /*function collisionFarmerBarn() {}
-*/
+ */
 function collisionSheepBarn() {
   AllSheep.forEach((eachSheepObj) => {
     fencesArr.forEach((fence) => {
@@ -285,7 +310,7 @@ function gameOver() {
   ScreenNode.style.display = "none";
   EndScreenNode.style.display = "flex";
 
-  if (countSheepInBarn > AllSheep.length / 2) {
+  if (countSheepInBarn > (AllSheep.length) / 2) {
     resultContainer.innerText = `You catched ${countSheepInBarn} out of ${AllSheep.length} sheep in the field!
        Congratulation You Win
     `;
@@ -313,12 +338,12 @@ document.addEventListener("keydown", (event) => {
 });
 document.addEventListener("keydown", (event) => {
   if (event.key === " ") {
-    if(!caughtSheep) return;
-    
-    if(caughtSheep.sheepIsInBarn()){
+    if (!caughtSheep) return;
+
+    if (caughtSheep.sheepIsInBarn()) {
       caughtSheep.isInBarn = true;
       countSheepInBarn++;
-      caughtSheep=null;
+      caughtSheep = null;
     }
     caught = false;
   }
@@ -336,8 +361,8 @@ RestartGameButtonNode.addEventListener("click", () => {
   timeDiv = null;
   sheepArr = [];
   sheepArrSpawn = [];
-  fencesObj=null;
-  fencesArr=[];
+  fencesObj = null;
+  fencesArr = [];
   gateOpen3 = false;
   gateOpen4 = false;
   numberGateOpenY3 = 0;
@@ -348,6 +373,7 @@ RestartGameButtonNode.addEventListener("click", () => {
   timeRemaining = quizDuration;
   timeLimit = quizDuration;
   countSheepInBarn = 0;
+  sheepRemovedOutsideBoxGame=0;
   resetGame();
   EndScreenNode.style.display = "none";
   startGame();
