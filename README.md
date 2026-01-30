@@ -12,7 +12,7 @@ Your mission is to catch wandering sheep and deliver them safely into the barn b
 5) Press **space** to release the sheep inside the barn.
 6) Save more thatn **50%** of the sheep to wiwn; otherwise ,you lose.
 7) Clicck **Restart** to restart the game.
-
+![image alt](https://github.com/bilelmarzouki/Mokhtar-s-sheep-farm-Game/blob/afa649addf2a65c4e2082ba877f711c334fe3528/start_Game.PNG)
 
 ## Controls
 -Arrow Keys: Move the farmer (Up / Down / Left / Right)
