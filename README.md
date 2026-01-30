@@ -1,4 +1,4 @@
-# Mokhtar Farm Game
+# Mokhtar's Farm Game
 
 A browser-based game built with vanilla JavaScript, HTML, and Css (developed in VS Code).
 Your mission is to catch wandering sheep and deliver them safely into the barn before time ends.
