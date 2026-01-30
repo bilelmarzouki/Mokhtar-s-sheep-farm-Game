@@ -2,7 +2,7 @@
 
 A browser-based game built with vanilla JavaScript, HTML, and Css (developed in VS Code).
 Your mission is to catch wandering sheep and deliver them safely into the barn before time ends.
-
+![image alt](https://github.com/bilelmarzouki/Mokhtar-s-sheep-farm-Game/blob/5aa015ff9e3415f00b13e7795eca1f89a2750123/start_Game.PNG)
 ## How to Play
 
 1) Click **Start** to begin the game.
